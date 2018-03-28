@@ -66,7 +66,7 @@ paths:
             $ref: '#/definitions/Error'
   /trips/last:
     get:
-      description: Returns data regarding a single trip
+      description: Returns data regarding the last trip in temporal order
       operationId: findLastTrip
       
       responses:
