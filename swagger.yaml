@@ -3,6 +3,7 @@ info:
   version: 1.0.1
   title: "ConnectedCarAPI"
   description: An API to give access to the data gathered in the Connected Cars Project
+               (this project has been created to support the development of the medium story)
   contact:
     name: Oracle Connected Car API Team
     email: luigi.saetta@oracle.com
