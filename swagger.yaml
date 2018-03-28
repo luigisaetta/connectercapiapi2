@@ -1,0 +1,184 @@
+swagger: "2.0"
+info:
+  version: 1.0.1
+  title: "ConnectedCarAPI"
+  description: An API to give access to the data gathered in the Connected Cars Project
+  contact:
+    name: Oracle Connected Car API Team
+    email: luigi.saetta@oracle.com
+    url: none
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+host: ubuntucontainers-dashboariotnew-zekci6cs.srv.ravcloud.com:5555
+basePath: /car-api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /trips:
+    get:
+      description: Returns the list of all the trips registered 
+      operationId: findTrips
+      parameters:
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/TripsListResponse"
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /trip/findByDayHour:
+    get:
+      description: Returns data regarding a single trip
+      operationId: findTripByDayHour
+      parameters:
+        - name: DAYHOUR
+          in: query
+          description: day hour
+          required: true
+          type: string
+        - name: CARID
+          in: query
+          description: car id
+          required: true
+          type: string
+      responses:
+        200:
+          description: trip response
+          schema:
+            $ref: '#/definitions/Trip'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /trips/last:
+    get:
+      description: Returns data regarding a single trip
+      operationId: findLastTrip
+      
+      responses:
+        200:
+          description: trip response
+          schema:
+            $ref: '#/definitions/Trip'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /trip/{ID}:
+    get:
+      description: Returns general data regarding a single trip
+      operationId: findTripByID
+      parameters:
+        - name: ID
+          in: path
+          description: ID
+          required: true
+          type: number
+      responses:
+        200:
+          description: trip response
+          schema:
+            $ref: '#/definitions/Trip'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /cars:
+    get:
+      description: Returns the list of all the cars registered 
+      operationId: findCars
+      parameters:
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/CarsListResponse"
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Trip:
+    type: object
+    properties:
+      ID:
+        type: number
+      GASOLINE:
+        type: number
+        description: the n. of liter of diesel consumed
+      DISTANCE:
+        type: number
+        description: num. of km travelled during the trip
+      SPEED_OVER_THRESHOLD:
+        type: number
+        description: indicator of how much driving is risky
+  TripsListResponse:
+    properties:
+      # The array of trips
+      TRIPS:
+        type: array
+        items: 
+          type: object
+          properties:
+            ID:
+              type: number
+            START_ID:
+              type: number
+              description: ID in OBD2_MSG table of the first msg
+            STOP_ID:
+              type: number
+              description: ID of the last msg
+            DAYHOUR:
+              type: string
+  TripMessagesResponse:
+    properties:
+      # The array of messages coming from the trip
+      MSGS:
+        type: array
+        items: 
+          type: string
+  CarsListResponse:
+    properties:
+      # The array of trips
+      CARS:
+        type: array
+        items: 
+          type: object
+          properties:
+            ID:
+              type: number
+            CARID:
+              type: string
+              description: ID of the CAR used in JSON MSG
+            NOTES:
+              type: string
+              description: notes
+  Error:
+    required:
+      - CODE
+      - MESSAGE
+    properties:
+      CODE:
+        type: integer
+        format: int32
+      MESSAGE:
+        type: string
